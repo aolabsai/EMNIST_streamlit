@@ -7,7 +7,7 @@ from torchvision import transforms, datasets
 from os import listdir
 from os.path import isfile, join
 
-dataset_list = ['MNIST', 'EMNIST_ByClass', 'EMNIST_Letters', 'EMNIST_Digits']
+dataset_list = ['MNIST', 'EMNIST_ByClass', 'EMNIST_Letters', 'EMNIST_Digits', 'Fashion_MNIST']
 # import from MNIST dataset on AWS using the instructions here: https://stackoverflow.com/a/40693405/4147579
 def unpickle():
     file_path = "./mnist.pkl.gz"
@@ -67,8 +67,18 @@ def process_data(dataset='MNIST'):
         emnist_test_complete = datasets.EMNIST(root='./EMNIST', split='digits', train=False, download=True, transform=transform)
         (MN_TRAIN, MN_TRAIN_Z), (MN_TEST, MN_TEST_Z) = (emnist_train_complete.data.numpy(),process_labels(emnist_train_complete.targets.numpy())) , (emnist_test_complete.data.numpy(), process_labels(emnist_test_complete.targets.numpy()))
         label_names = emnist_train_complete.classes
+    elif dataset == "Fashion_MNIST":
+        train_dataset = datasets.FashionMNIST(root='./FashionMNIST', train=True, download=True, transform=transform)
+        test_dataset = datasets.FashionMNIST(root='./FashionMNIST', train=False, download=True, transform=transform)
+    
+        MN_TRAIN, train_labels = train_dataset.data.numpy(), train_dataset.targets.numpy()
+        MN_TEST, test_labels = test_dataset.data.numpy(), test_dataset.targets.numpy()
+    
+        MN_TRAIN_Z = process_labels(train_labels)
+        MN_TEST_Z = process_labels(test_labels)
+        label_names = train_dataset.classes
     else:
-        raise ValueError("Invalid dataset option selected. Please choose from 'MNIST', 'EMNIST_ByClass', 'EMNIST_Letters', or 'EMNIST_Digits'.")
+        raise ValueError("Invalid dataset option selected. Please choose from 'MNIST', 'EMNIST_ByClass', 'EMNIST_Letters', 'EMNIST_Digits' or 'Fashion_MNIST'.")
 
     return (MN_TRAIN, MN_TRAIN_Z), (MN_TEST, MN_TEST_Z), label_names
 

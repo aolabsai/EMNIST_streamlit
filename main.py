@@ -553,15 +553,15 @@ with state_col:
                     st.write("Result as an label name: " + data.label_names[z_int] if z_int <= 61 else '')
                 else:
                     st.write("Label name: " + data.label_names[z_int] if z_int <= 61 else '')
-            elif st.session_state.chosen_set[0] == 'EMNIST_Letters':
-                _,_,label_names = data.process_data(dataset='EMNIST_Letters')
+            elif st.session_state.chosen_set[0] in ['EMNIST_Letters', 'Fashion_MNIST']:
+                _,_,label_names = data.process_data(dataset=st.session_state.chosen_set[0])
                 if not st.session_state.is_training:
                     st.write("Actual label: "+ label_names[bin_to_pix(np.array([int(i) for i in st.session_state.selected_z[sel_state-1]])).item()])
                     
                     st.write("Result as an label name: " + label_names[z_int] if z_int <= 26 else '')
                 else:
                     st.write("Label name: " + label_names[z_int] if z_int <= 26 else '')
-                
+
             else:
                 if not st.session_state.is_training:
                     st.write("Actual label: "+str(bin_to_pix(np.array([int(i) for i in st.session_state.selected_z[sel_state-1]])).item()))
